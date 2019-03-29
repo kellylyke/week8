@@ -30,6 +30,12 @@
       <artifactId>javaee-web-api</artifactId>
       <version>7.0</version>
     </dependency>
+
+    <dependency>
+      <groupId>org.codehaus.mojo</groupId>
+      <artifactId>axistools-maven-plugin</artifactId>
+      <version>1.4</version>
+    </dependency>
     <!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
     <dependency>
       <groupId>mysql</groupId>

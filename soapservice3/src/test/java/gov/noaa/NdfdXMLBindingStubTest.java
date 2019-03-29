@@ -1,25 +1,36 @@
 package gov.noaa;
 
-import org.jboss.arquillian.container.test.api.Deployment;
-import org.jboss.arquillian.junit.Arquillian;
-import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.asset.EmptyAsset;
-import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
-import static org.junit.Assert.*;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.Unmarshaller;
+import java.io.StringReader;
 
-@RunWith(Arquillian.class)
+import static org.junit.Assert.assertEquals;
+
+
 public class NdfdXMLBindingStubTest {
-    @Deployment
-    public static JavaArchive createDeployment() {
-        return ShrinkWrap.create(JavaArchive.class)
-                .addClass(NdfdXMLBindingStub.class)
-                .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
-    }
 
     @Test
-    public void NDFDgenByDayLatLonList() {
+    public void latLonListZipCode() throws Exception {
+        NdfdXMLBindingStub binding = (NdfdXMLBindingStub) new NdfdXMLLocator().getndfdXMLPort();
+        String result = binding.latLonListZipCode("53508");
+        //assertEquals("???", result);
+
+        try {
+            JAXBContext jaxbContext = JAXBContext.newInstance(DwmlType.class);
+
+            Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+
+            DwmlType dwml = (DwmlType) jaxbUnmarshaller.unmarshal(new StringReader(result));
+
+            String list = dwml.getLatLonList();
+
+            assertEquals("42.8617,-89.5365", list);
+
+        } catch (Exception exception) {
+            System.out.println("Problems..." + exception);
+        }
     }
 }
+
